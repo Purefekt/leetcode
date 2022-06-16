@@ -7,10 +7,6 @@
 class Solution:
     def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
         
-        # edge case when tree is null
-        if root is None:
-            return None
-        
         # iterative with collections.deque
         queue = collections.deque()
         # start with root
@@ -18,16 +14,15 @@ class Solution:
         
         # while queue is not null
         while queue:
-            current_node = queue.popleft()
+            node = queue.popleft()
             
-            # swap
-            current_node.left, current_node.right = current_node.right, current_node.left
-            
-            # add left and right nodes to queue if not none
-            if current_node.left is not None:
-                queue.append(current_node.left)
-            if current_node.right is not None:
-                queue.append(current_node.right)
+            if node:
+                # swap
+                node.left, node.right = node.right, node.left
+                
+                # add next children to queue
+                queue.append(node.left)
+                queue.append(node.right)
         
         return root
             
