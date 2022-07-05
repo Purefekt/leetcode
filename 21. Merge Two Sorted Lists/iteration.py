@@ -1,3 +1,10 @@
+"""
+Iteration
+Make a false head. Use a pointer tail to iterate over and build the new linked list.
+Check each node of list1 and list2. point to whichever is smaller.
+Once the while loop terminates, one of the two lists are empty, point the end of the tail to the other list.
+"""
+
 # Definition for singly-linked list.
 # class ListNode:
 #     def __init__(self, val=0, next=None):
@@ -6,32 +13,27 @@
 class Solution:
     def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
         
-        # initialize an empty linked list
+        # start with dummy node
         dummy = ListNode()
-        # tail pointer will be used to adjust current nodes next
         tail = dummy
         
-        # while list1 and list2 are not None, if either is None, loop ends. This means one list has ended, the remaining elements in the other list will all be sorted and greater than all prev elements, so just add that to the current
-        while (list1 is not None) and (list2 is not None):
-            # if list1 node is larger than list2 node, then point to list2
-            if list1.val > list2.val:
-                tail.next = list2
-                # update list2
-                list2 = list2.next
-            # else if list1 node is smaller or eq to list2 node, then point to list1
-            else:
+        while list1 and list2:
+            # if list1 node is smaller, point to it. update tail and list1
+            if list1.val < list2.val:
                 tail.next = list1
-                # update list1
+                tail = tail.next
                 list1 = list1.next
-            #update tail pointer
-            tail = tail.next
+            # else if list2 node is smaller or equal, point to it. update tail and list2
+            else:
+                tail.next = list2
+                tail = tail.next
+                list2 = list2.next
         
-        # while loop ends when one of the two lists is None. Add the non empty list to the end
-        if list1 is not None:
+        # add the list which isnt null yet
+        if list1:
             tail.next = list1
         else:
             tail.next = list2
         
-        # dummy list has the first element as 0, so the actual answer is starting from the next node
         return dummy.next
-                
+    
