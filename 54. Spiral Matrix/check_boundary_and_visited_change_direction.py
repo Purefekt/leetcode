@@ -1,56 +1,40 @@
 """
-Start off by moving right. If we hit a boundary or a visited cell, then change to the next direction
-direction is right->bottom->left->up->right and so on
-repeat till output is the size of matrix
-
-CAN BE BETTER
+Start at [0,0]. Go right till we hit the boundary or an already visited cell. Change direction to down. Repeat the same and keep changing directions in the order right,down,left,up,right...
 """
 
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+          
         m = len(matrix)
         n = len(matrix[0])
         
-        directions = {
-            'right' : (0,1),
-            'bottom' : (1,0),
-            'left' : (0,-1),
-            'up' : (-1,0)
-        }
-        
         output = []
+        direction = (0,1)
+        r,c = direction[0], direction[1]
         visited = set()
-        # start by going right from (0,0)
-        i = 0
-        j = 0
-        saved_i = 0
-        saved_j = 0
-        visited.add((i,j))
-        output.append(matrix[i][j])
-        curr_dir = 'right'
-        
-        while len(output) != m*n:
-            r,c = directions[curr_dir]   
+        i,j = 0,0
+        # start off by going right
+        while len(output) < m*n:
+            output.append(matrix[i][j])
+            visited.add((i,j))     
+
+            if i+r>=m or j+c>=n or i+r<0 or j+c<0 or (i+r,j+c) in visited:
+                # if right, change to down
+                if direction == (0,1):
+                    direction = (1,0)
+                # if down, change to left
+                elif direction == (1,0):
+                    direction = (0,-1)
+                # if left, change to up
+                elif direction == (0,-1):
+                    direction = (-1,0)
+                # if up, change to right
+                elif direction == (-1,0):
+                    direction = (0,1)
+            r = direction[0]
+            c = direction[1]
             i = i+r
             j = j+c
-            
-            if i>=0 and j>=0 and i<m and j<n and (i, j) not in visited:
-                visited.add((i, j))
-                saved_i = i
-                saved_j = j
-                output.append(matrix[i][j])
-                          
-            else:   
-                i = saved_i
-                j = saved_j
-                if curr_dir == 'right':
-                    curr_dir = 'bottom'
-                elif curr_dir == 'bottom':
-                    curr_dir = 'left'
-                elif curr_dir == 'left':
-                    curr_dir = 'up'
-                elif curr_dir == 'up':
-                    curr_dir = 'right'
         
         return output
-      
+                
