@@ -1,34 +1,34 @@
 """
-Create a hashmapm where the keys are 26 length long tuples. Index [0] == letter a and index [25] == z. Do this for all strings in the list. All the words using the same number of same letter
-or anagrams will have the same exact tuple. the values will be these strings
+For each word, create a count of every lowercase english letter. To do this create a list of size 26 for each word. 
+Index 0 is a and index 25 is z. Initialize all to 0 and iterate through all characters and increment.
+Use this list as the key of the hashmap and the value will be a list of all words which have the same counts.
+Result will be a list of all the values of the hashmap
+
+O(NK) time where n is the number of strings in the input and k is the length of the longest string
+O(N) space since in the worst case none of the words are anagrams of each other. Thus we will store n keys in the hashmap and result will have n elements.
 """
 
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         
-        # hashmap, tuples of size 26:list of words
-        result = {}
-        
-        for s in strs:
+        hashmap = {}
+        for word in strs:
+            curr_word = [0] * 26
+            for c in word:
+                index = ord(c) - ord('a')
+                curr_word[index] += 1
             
-            # list of 0s with size 26 for all letters a-z. current_word[0] == a and current_word[25] == z
-            current_word = [0] * 26 
-            for c in s:
-                # get the index position using ascii
-                current_word[ord(c) - ord('a')] = current_word[ord(c) - ord('a')] + 1
+            # convert to tuple to be hashable
+            curr_word = tuple(curr_word)
             
-            # convert current_word list to a tuple, since list cannot be used as hashmap key
-            current_word = tuple(current_word)
-            
-            
-            if current_word not in result.keys():
-                result[current_word] = [s]
+            if curr_word not in hashmap:
+                hashmap[curr_word] = [word]
             else:
-                result[current_word].append(s)
-            
-        # add all the values from result hashmap to a list
-        anagrams_list = []
-        for v in result.values():
-            anagrams_list.append(v)
-            
-        return anagrams_list
+                hashmap[curr_word].append(word)
+        
+        res = []
+        for v in hashmap.values():
+            res.append(v)
+        
+        return res
+    
