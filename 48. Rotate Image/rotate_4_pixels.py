@@ -1,11 +1,12 @@
 """
-Rotate 4 pixels at a time and then move to the next set of pixels.
-Use 4 pointers, left = 0, right = n-1, top = 0 and bottom = n-1.
-After rotating one set of pixels, move to the next ones. 
-topleft moves right, topright moves bottom, bottomright moves left and bottomleft moves up. Use for loop for this.
-Once an outer level is done, move all pointers inwards and repeat on the next level.
+Swap 4 cells at a time and move inward. 
+Use 4 pointers. Set l and r to 0 and len(matrix)-1. 
+Run a while loop till l<r. For each iteration of the while loop,set top=l and bot=r. run a for loop from 0 till r-l and swap the topleft, topright, botleft, botright.
+Update l and r at the end of the for loop to move to an inward level
 
-For rotation. Cache the top left and then move the pixels in clockwise motion starting from bottom left. 
+O(m) where m is the number of cells in the matrix. Each cell will be read and written to once.
+O(1) in place swaps
+
 """
 
 class Solution:
@@ -13,28 +14,15 @@ class Solution:
         """
         Do not return anything, modify matrix in-place instead.
         """
-        n = len(matrix)
+        l = 0
+        r = len(matrix)-1
         
-        left = 0
-        right = n-1
-        # when left is greater than right, we have completed the last layer
-        while left < right:
-            top = left
-            bottom = right
-            
-            for i in range(right-left):
-                # cache topleft || shift topleft -> right
-                topleft = matrix[top][left+i]
-                # move bottomleft into topleft || shift topleft -> right, bottomleft -> up
-                matrix[top][left+i] = matrix[bottom-i][left]
-                # move bottomright to bottomleft || shift bottomleft -> up, bottomright -> left
-                matrix[bottom-i][left] = matrix[bottom][right-i]
-                # move topright to bottomright || shift bottomright -> left, topright -> down
-                matrix[bottom][right-i] = matrix[top+i][right]
-                # move topleft to topright || shift topright -> down
-                matrix[top+i][right] = topleft
-            
-            # move to inward level
-            left += 1
-            right -= 1
-    
+        while l<r:
+            top = l
+            bot = r
+            for i in range(r-l):
+                matrix[top+i][r], matrix[bot][r-i], matrix[bot-i][l], matrix[top][l+i] = matrix[top][l+i], matrix[top+i][r], matrix[bot][r-i], matrix[bot-i][l]
+                
+            l += 1
+            r -= 1
+        
