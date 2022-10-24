@@ -1,20 +1,22 @@
 """
-Keep updating the current sum of a subarray till the current sum becomes negative. If it becomes negative, then set the current sum to the next element and repeat. Keep a maxsum number and update it on every iteration, it must be the max between itself and the current sum
+Kadanes algorithms
+Maintain a maxsum and cur_sum.
+Loop over all the numbers and keep adding them to cur_sum. Everytime check if the cur_sum > max_sum, in this case update max_sum
+At any point if cur_sum becomes negative, reset it to 0
+O(n) time since we iterate through the list once
+O(1) space since we use constant space to store max_sum and cur_sum
 """
 
 class Solution:
     def maxSubArray(self, nums: List[int]) -> int:
         
-        # initialize max sum to the first element. Initialize curr_sum to 0 since we throw away any subarray whose sum is below 0
-        max_sum = nums[0]
-        curr_sum = 0
-        
+        max_sum = -math.inf
+        cur_sum = 0
         for n in nums:
-            if curr_sum < 0:
-                curr_sum = 0
-            
-            curr_sum = curr_sum + n
-            max_sum = max(max_sum, curr_sum)
+            cur_sum += n
+            max_sum = max(max_sum, cur_sum)
+            if cur_sum < 0:
+                cur_sum = 0
         
         return max_sum
-            
+    
