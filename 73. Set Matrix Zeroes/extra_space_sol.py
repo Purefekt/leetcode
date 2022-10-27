@@ -1,7 +1,10 @@
 """
-Extra space solution. Time O(m*n), space O(m+n).
-In one pass go through the matrix and make a note of the rows and columns where we have 0s.
-In the next go change those rows and cols to 0s
+Extra Space sol.
+Iterate through the matrix and find all cells where we have a 0
+Store the row and col in sets. At the end we know all rows and all cols which must be set to 0
+Set these rows and cols to zero
+O(m*n) time since we iterate through all cells in the matrix
+O(m+n) space to store two sets for row and cols. In the worst case, entire matrix is 0s and we store m elements in set row and n elements in set col
 """
 
 class Solution:
@@ -12,21 +15,19 @@ class Solution:
         m = len(matrix)
         n = len(matrix[0])
         
-        rows, cols = set(), set()
+        zero_row, zero_col = set(), set()
         
-        # get the rows and cols which need to be changed
         for i in range(m):
             for j in range(n):
                 if matrix[i][j] == 0:
-                    rows.add(i)
-                    cols.add(j)
+                    zero_row.add(i)
+                    zero_col.add(j)
         
-        # change all marked rows to 0s
-        for row in rows:
-            for c in range(n):
-                matrix[row][c] = 0
-        # change all marked cols to 0s
-        for col in cols:
-            for r in range(m):
-                matrix[r][col] = 0
-    
+        # make all rows in zero_row and all cols in zero_col 0
+        for r in zero_row:
+            for j in range(n):
+                matrix[r][j] = 0
+        for c in zero_col:
+            for i in range(m):
+                matrix[i][c] = 0
+            

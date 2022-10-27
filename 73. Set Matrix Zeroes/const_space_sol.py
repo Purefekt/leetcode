@@ -3,16 +3,17 @@ Using constant extra space. Use the first row and first column as flags. Set ele
 Use 1 extra variable to keep track of the 0 in the first column (since it overlaps with first element of first row at matrix[0][0])
 First set all columns from the 2nd column to 0s where we find a 0 in the first column
 Then set all rows from the 2nd row to 0s where we find a 0 in the first row
-Finally if both matrix[0][0] (for row) and cell_extra_col are 0, then set both first row and col to 0, else set only the row or oly the column or none to 0 based on the flags.
+Finally if both matrix[0][0] (for row) and cell_extra_col are 0, then set both first row and col to 0, else set the row OR col OR none to 0s.
+O(m*n) time since we iterate through all cells in the matrix
+O(1) space since we use constant space to store the flag for the first col
 """
 
 class Solution:
     def setZeroes(self, matrix: List[List[int]]) -> None:
         """
         Do not return anything, modify matrix in-place instead.
-        """
-        m = len(matrix)
-        n = len(matrix[0])
+        """        
+        m,n = len(matrix), len(matrix[0])
         
         cell_extra_col = None #for matrix[0][0] for rows
         
@@ -51,3 +52,4 @@ class Solution:
         elif matrix[0][0] == 0:
             for r in range(m):
                 matrix[r][0] = 0
+                
