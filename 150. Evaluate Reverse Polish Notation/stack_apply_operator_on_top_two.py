@@ -1,31 +1,29 @@
 """
-Create a stack. If we have a number, add it to the stack. If it is an operator, pop the 2 elements from the stack, apply the operator and push the result onto the stack. Repeat for all elements in tokens.
+Use operator class and use hashmap for cleaner string to operator mapping. add, sub, mul, trudiv
+Iterator over all tokens, add them to stack if they are a number.
+If a token is an operator, pop top 2 elements of the stack, apply the operation and push the result to the top of stack
+At the end of the loop, the stack will contain a single element, the answer
+O(n) time since we go through all tokens once in one pass
+O(n) space, in the worst case all the numbers are in the stack. Due to how this notation works, there can never be more than n/2 numbers in a token list of n elements. Thus using n/2 space.
 """
 
 class Solution:
     def evalRPN(self, tokens: List[str]) -> int:
         
-        # map operator strings to operator function
-        operators_map = {
-            '+': operator.add,
-            '-': operator.sub,
-            '/': operator.truediv,
-            '*': operator.mul
-        }
+        operator_map = {'+':operator.add, '-':operator.sub, '*':operator.mul, '/':operator.truediv}
         
         stack = []
         
-        for n in tokens:
-            if n not in operators_map.keys():
-                stack.append(n)
+        for t in tokens:
+            if t not in operator_map:
+                stack.append(int(t))
             else:
-                operand_1 = int(stack.pop())
-                operand_2 = int(stack.pop())
+                operatorr = operator_map[t]
+                op2 = stack.pop()
+                op1 = stack.pop()
                 
-                operation = math.trunc(operators_map[n](operand_2, operand_1))
-                
-                stack.append(operation)
+                result = int(operatorr(op1, op2))
+                stack.append(result)
         
-        # at the end stack will have a single value which will be the output
         return stack[0]
     
