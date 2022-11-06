@@ -1,39 +1,30 @@
 """
-Split the tokens and get lists of all versions
-Run a for loop for the range of the larger list. On every token compare their int values and return if one is larger than the other
-To check for if the smaller list is out of range, then substitute that value as 0
-if the for loop terminates without return, both are equal
+Split both versions using '.' and get lists of tokens
+Run a for loop for the max len of either versions
+Add a condition to append a 0 for the smaller version
+compare each and return based on condition
 
-O(max(m,n)) time where m is version1 len and n is version2 len
-O(n+m) space since we need to store these two lists
+O(n + m + max(n,m)). O(n) to build the list for version1, O(m) to build the list of version2 and O(max(m,n)) to iterate over both lists
+O(n+m) space to store both lists
 """
 
 class Solution:
     def compareVersion(self, version1: str, version2: str) -> int:
         
-        # split the tokens
+        # get lists for both versions
         v1 = version1.split('.')
         v2 = version2.split('.')
         
-        # go over the len of the larger and compare
         for i in range(max(len(v1), len(v2))):
+            if i>=len(v1): v1.append('0')
+            if i>=len(v2): v2.append('0')
             
-            # these statements to check for out of range error
-            if i >= len(v1):
-                n1 = 0
-            else:
-                n1 = int(v1[i])
-            
-            if i >= len(v2):
-                n2 = 0
-            else:
-                n2 = int(v2[i])
-            
-            # compare
-            if n1 > n2:
+            if int(v1[i]) > int(v2[i]):
                 return 1
-            elif n2 > n1:
+            elif int(v1[i]) < int(v2[i]):
                 return -1
+            else:
+                continue
         
         return 0
-    
+        

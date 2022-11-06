@@ -1,20 +1,20 @@
 """
-Solve this with a list. Each element in the list is a tuple of 2 elements. First is the value being pushed on the stack and second is the current min value. The getMin value
-will be the 2nd element of the last tuple in the main list.
+All methods are simple except min_val. For that everytime we push a new element to the stack, it will be a tuple of two values.
+(val, cur_min). Val will be the integer pushed and cur_min will be the min of the val and the prev min
+
+O(1) time
+O(n) space to store the stack in a list
 """
 
 class MinStack:
 
     def __init__(self):
-        # initialize a stack as a list
-        self.stack = list()
+        self.stack = []
         
 
     def push(self, val: int) -> None:
-        # if stack is empty, then push a tuple (val,val) to the list
         if not self.stack:
-            self.stack.append((val, val))
-        # else stack not empty, then push a tuple with val as the first element and min of val and previous min val which is the 2nd element of the last tuple
+            self.stack.append((val,val))
         else:
             self.stack.append((val, min(val, self.stack[-1][1])))
         
@@ -24,12 +24,10 @@ class MinStack:
         
 
     def top(self) -> int:
-        # the top element is the first element of the last tuple in the list
         return self.stack[-1][0]
         
 
     def getMin(self) -> int:
-        # min is the second element of the last tuple in the list
         return self.stack[-1][1]
         
 
