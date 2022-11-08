@@ -1,3 +1,9 @@
+"""
+BFS. Add a node and swap its left and right.
+O(n) time since we traverse all nodes
+O(n) space since in the worst case we have all the nodes in the queue. 
+"""
+
 # Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, val=0, left=None, right=None):
@@ -7,22 +13,18 @@
 class Solution:
     def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
         
-        # iterative with collections.deque
-        queue = collections.deque()
-        # start with root
-        queue.append(root)
+        if not root:
+            return
         
-        # while queue is not null
+        queue = [root]
+        
         while queue:
-            node = queue.popleft()
+            node = queue.pop(0)
+            #swap
+            node.left, node.right = node.right, node.left
             
-            if node:
-                # swap
-                node.left, node.right = node.right, node.left
-                
-                # add next children to queue
-                queue.append(node.left)
-                queue.append(node.right)
+            if node.left: queue.append(node.left)
+            if node.right: queue.append(node.right)
         
         return root
-            
+        
