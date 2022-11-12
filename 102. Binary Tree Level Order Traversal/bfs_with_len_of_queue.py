@@ -1,5 +1,12 @@
 """
-Apply BFS. But to get nodes level wise, use a for loop for the length of current queue. These many nodes are on the same level.
+BFS. Start with a queue and the root.
+Start a while loop, Each time run a for loop for the length of the current queue.
+Inside the for loop, keep popping and adding all nodes in current queue to a list.
+Add that nodes left and right children to the queue.
+At the end of for loop, we will have a list of all node values in that level. append this to result and repeat for next level
+
+O(n) time to traverse all nodes
+O(n) space to maintain all nodes in the queue
 """
 
 # Definition for a binary tree node.
@@ -14,24 +21,20 @@ class Solution:
         if not root:
             return []
         
-        queue = collections.deque()
-        output = []
-        queue.append(root)
+        queue = [root]
         
+        res = []
         while queue:
-            num_nodes_in_level = len(queue)
             
             curr_level = []
-            for i in range(num_nodes_in_level):
-                node = queue.popleft()
+            for i in range(len(queue)):
+                node = queue.pop(0)
                 curr_level.append(node.val)
                 
-                if node.left:
-                    queue.append(node.left)
-                if node.right:
-                    queue.append(node.right)
-            
-            output.append(curr_level)
+                if node.left: queue.append(node.left)
+                if node.right: queue.append(node.right)
+                
+            res.append(curr_level)
         
-        return output
-    
+        return res
+            
