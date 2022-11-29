@@ -1,4 +1,3 @@
-
 """
 DP. Dp tree, each node of this dp tree is the max profit when that given node is the root of that subtree.
 The value at root node will be the max profit when the subtree is the input tree
@@ -6,6 +5,8 @@ Get the level order traversal of the tree.
 For the last level, put the nodes in a hashmap and initialize their values to [node.val, 0]
 First element is the maxprofit when that node is the root, the second element is the profit sum of its children
 Fill the dp array where for profit we take the max of the nodes val and its grandchildren, which is stored as the 2nd element of its children nodes AND the sum of its childrens profit (when we do not rob that node)
+O(n) time, 2 passes over all the nodes
+O(n) space to store details of all nodes
 """
 
 # Definition for a binary tree node.
