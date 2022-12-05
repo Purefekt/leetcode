@@ -5,7 +5,7 @@ Run a for loop from the current interval next interval till the last interval
 keep updating the new end time if the current and next intervals overlap.
 Move i to j so that we do not explore already merged intervals again.
 Once we reach an interval which does not overlap, break the for loop and append the start and the updated end to res. Continue with next non merged interval
-O(n) time to go over all intervals
+O(nlogn) time to sort.
 O(logn) space to sort
 """ 
 
