@@ -1,8 +1,9 @@
 """
-Create a level order list of all the nodes. For ex -> [[1], [2,3], [4,5,6,7]]
-Then go through list and set the next pointer of each element to the next, except the last element, thus each loop for each list will be till range(len(list)-1)
+Create level order 2d array. 
+For each level point the next to the next, except last one which points to None
 
-Linear space solution
+O(n) time since we traverse all n nodes in the tree
+O(n) space since we save all nodes in the level order array
 """
 
 """
@@ -17,32 +18,29 @@ class Node:
 
 class Solution:
     def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':
-        
+
         if not root:
-            return None
+            return
         
-        # get level order traversal
+        # get level order traversal and point to next
         level_order = []
-        queue = collections.deque()
-        queue.append(root)
-        level_size = 1
-        
-        while queue:       
-            current_level = []
-            for i in range(level_size):
-                node = queue.popleft()
-                current_level.append(node)
+        queue = [root]
+        while queue:
+            cur_lvl = []
+            for i in range(len(queue)):
+                node = queue.pop(0)
+                cur_lvl.append(node)
                 if node.left:
                     queue.append(node.left)
-                if node.right:
                     queue.append(node.right)
-            level_order.append(current_level)
-            level_size *= 2
-        
+            level_order.append(cur_lvl)
         
         for level in level_order:
-            for i in range(len(level)-1):
-                level[i].next = level[i+1]
+            if len(level) == 1:
+                level[0].next = None
+            else:
+                for i in range(len(level)-1):
+                    level[i].next = level[i+1]
         
         return root
-        
+                
