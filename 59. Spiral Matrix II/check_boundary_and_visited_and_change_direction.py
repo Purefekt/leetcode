@@ -1,53 +1,50 @@
 """
-Initialize a n*n matrix with zeros so we can input numbers using index.
-start from (0,0) and keep adding numbers by moving right, then down, then left, then up and then back to right.
-Change direction when we hit a boundary or a visited node
+Initialize a matrix of n*n with None
+Start from (0,0) and go right. Keep filling the matrix starting right.
+Change direction if we hit a wall or visited cell. Keep change of directions in a hashmap
+
+O(n^2) time to traverse all cells
+O(n^2) to keep track of visited
 """
 
 class Solution:
     def generateMatrix(self, n: int) -> List[List[int]]:
         
-        # initialize n*n matrix with 0s
-        matrix = []
-        for i in range(n):
-            curr_row = []
-            for j in range(n):
-                curr_row.append(0)
-            matrix.append(curr_row)
-        
-        
-        # add elements to the matrix
-        num = 1
-        visited = set()
-        i,j = 0,0
-        directions = {
-            'right' : (0,1),
-            'down' : (1,0),
-            'left' : (0,-1),
-            'up' : (-1,0)
+        direction_map = {
+            (0,1):(1,0),
+            (1,0):(0,-1),
+            (0,-1):(-1,0),
+            (-1,0):(0,1)
         }
-        curr_dir = 'right'
+
+        # init the matrix
+        res = []
+        for i in range(n):
+            res_row = []
+            for j in range(n):
+                res_row.append(None)
+            res.append(res_row)
+
+        r,c = 0,0
+        direction = (0,1)
+        visited = set()
+        for i in range(1,n**2 + 1):
+            res[r][c] = i
+            visited.add((r,c))
+
+            # update r and c
+            r += direction[0]
+            c += direction[1]
+
+            # if out of bound or visited cell, roll back r and c, change direction, update r and c
+            if r>=n or c>=n or r<0 or c<0 or (r,c) in visited:
+                # roll back r and c
+                r -= direction[0]
+                c -= direction[1]
+                # change dir
+                direction = direction_map[direction]
+                # update r and c
+                r += direction[0]
+                c += direction[1]
         
-        # add (0,0) to visited and matrix
-        matrix[i][j] = num
-        visited.add((i,j))
-        while num != n*n:
-            r,c = directions[curr_dir]
-            if i+r>=0 and j+c>=0 and i+r<n and j+c<n and (i+r, j+c) not in visited:
-                i = i+r
-                j = j+c
-                num += 1
-                matrix[i][j] = num
-                visited.add((i,j))
-            else:
-                if curr_dir == 'right':
-                    curr_dir = 'down'
-                elif curr_dir == 'down':
-                    curr_dir = 'left'
-                elif curr_dir == 'left':
-                    curr_dir = 'up'
-                elif curr_dir == 'up':
-                    curr_dir = 'right'
-        
-        return matrix          
-            
+        return res
