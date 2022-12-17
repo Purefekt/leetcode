@@ -1,39 +1,43 @@
 """
-BFS from all 0s solution. O(m*n) time and space.
+Run bfs with cost element from all 0s.
+Set up a queue with all mat positions with a 0. Add it to the queue as ((x,y), 0). The position and cost
+Add all these nodes to visited as well
+Run bfs on this queue in all 4 directions. For valid children which havnt been visited, overwrite their cost in the mat table as cost+1
+Add these child nodes to the queue with (pos, cost+1) and add to visited
+
+O(m*n) to traverse all cells to build the queue. Running bfs will also go through all nodes once
+O(m*n) to store upto n nodes at max in the queue
 """
 
 class Solution:
     def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:
         
-        # Use all 0s to find the distances from them to all 1s
-        # Add all cells with 0s to a queue.
-        # update the matrix with 0 for all 0s and inf for all 1s as initial distances.
-        rows = len(mat)
-        cols = len(mat[0])
-        queue = collections.deque()
-        
-        for i in range(rows):
-            for j in range(cols):
+        m = len(mat)
+        n = len(mat[0])
+
+        # run bfs from 0s to all 1s
+        queue = []
+        visited = set()
+        for i in range(m):
+            for j in range(n):
                 if mat[i][j] == 0:
-                    queue.append((i,j))
-                    mat[i][j] = 0
-                else:
-                    mat[i][j] = inf
+                    queue.append(((i,j),0))
+                    visited.add((i,j))
         
-        # for each cell in the queue, check in all 4 directions. 
-        # if a directional cell's value is more than the current cell + 1, then update that cell to cell+1 distance and also add that cell to the queue
+
         directions = [(-1,0), (0,1), (1,0), (0,-1)]
         while queue:
-            i,j = queue.popleft()
-            # all 4 directions
-            for dir in directions:
-                new_i = i+dir[0]
-                new_j = j+dir[1]
-                # check validity
-                if new_i>=0 and new_j>=0 and new_i<rows and new_j<cols:
-                    if mat[new_i][new_j] > mat[i][j]+1:
-                        mat[new_i][new_j] = mat[i][j]+1
-                        queue.append((new_i, new_j))
+            node, cost = queue.pop(0)
+            r,c = node[0], node[1]
+            # check all directions
+            for direction in directions:
+                destination = tuple(map(lambda x,y:x+y, node, direction))
+                new_r, new_c = destination[0], destination[1]
+
+                if 0<=new_r<m and 0<=new_c<n and destination not in visited:
+                    visited.add(destination)
+                    mat[new_r][new_c] = cost+1
+                    queue.append(((new_r, new_c), cost+1))
         
         return mat
-    
+                
