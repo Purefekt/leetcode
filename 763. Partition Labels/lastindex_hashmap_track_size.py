@@ -1,29 +1,31 @@
 """
-create a hashmap, char:lastindex. Each unique character in the string and its last position
-Next loop through the string and keep a size counter and max_lastindex variable
-on each character, update the max_lastvariable to max of itself and the lastvariable of current char + inc size by 1 on each iteration
-when current character index == max_lastindex, this means all characters in this substring are only in this substring. At this point append the current size to the output, and set size to 0 and repeat.
+Create a hashmap with each char and index of its last occurance
+Start a loop, go over each character.
+Track the last occurance of a character in a set. Do this by keeping a var cur_end, at first it will be the last occurance of the first char
+Keep iterating and this value will change since before the last occurance of a given char, another char within the same substring can have a later occurance, so use max
+If i==cur_end, this means we are at the last occurance of the char with the last occurance in the entire substring, add the len of this substring to res
+Also keep a prev_end var and update it to get the substring correctly
+
+O(n) time to go over all elements once to create hashmap and once to create res
+O(1) space since the hashmap will have at max 26 keys and constant number of values.
 """
 
 class Solution:
     def partitionLabels(self, s: str) -> List[int]:
         
-        # build hashmap of lastindex
-        lastindex_map = {}
-        for i in range(len(s)):
-            lastindex_map[s[i]] = i
+        hashmap = {}
+        for i,c in enumerate(s):
+            hashmap[c] = i
         
-        # all pointers and counters
-        size = 0
-        max_lastindex = 0
-        output = []
+        i = 0
+        res = []
+        cur_end = 0
+        prev_end = 0
         for i in range(len(s)):
-            max_lastindex = max(max_lastindex, lastindex_map[s[i]])
-            size += 1
-            
-            if i == max_lastindex:
-                output.append(size)
-                size = 0
-        
-        return output
-    
+            cur_end = max(cur_end, hashmap[s[i]])
+            if cur_end == i:
+                res.append(cur_end-prev_end+1)
+                prev_end = cur_end+1
+                cur_end = 0
+
+        return res
