@@ -1,5 +1,11 @@
 """
-Use inorder traversal. Whenever we update the inorder output, check if the new element is larger than the last one. If not, then false, else true.
+ITERATIVE
+Run inorder tree traversal.
+when adding a node, see if it is smaller or eq to the previous node, if yes then false
+initialize inorder list with -inf as 0th element to avoid error when adding the very first node
+
+O(n) time
+O(n) space
 """
 
 # Definition for a binary tree node.
@@ -10,28 +16,24 @@ Use inorder traversal. Whenever we update the inorder output, check if the new e
 #         self.right = right
 class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
-        
-        # start inorder output with -infinity so to avoid bug when adding the first element
-        inorder_output = [-inf]
-        stack = collections.deque()
-        node = root #pointer
-        
-        while node or stack:
+
+        # inorder tree traversal, if node added is larger than previous, then return false
+
+        stack = []
+        inorder = [-inf]
+        curr_node = root
+
+        while curr_node or stack:
+
+            while curr_node:
+                stack.append(curr_node)
+                curr_node = curr_node.left
             
-            while node:
-                stack.append(node)
-                node = node.left
-            
-            node = stack.pop()
-            
-            # false if the new node value is less than the last 
-            if node.val <= inorder_output[-1]:
+            curr_node = stack.pop()
+            inorder.append(curr_node.val)
+            if inorder[-1] <= inorder[-2]:
                 return False
-            
-            inorder_output.append(node.val)
-            node = node.right
-        
-        
-        # if while loops ends, means true
+            curr_node = curr_node.right
+
         return True
-    
+        
