@@ -1,3 +1,14 @@
+"""
+Topological sorting.
+Create a adj list and a hashmap of in_edges for each node
+For all nodes with initial in_edges as 0, add it to the queue. (if the queue is empty return False since no topological ordering found)
+GO through the queue, for each node reduce its children's in_edge count by 1. If any child's in_edge count becomes 0, add it to the queue
+Once the queue is empty, check the in_edges for all nodes, if there is even one node with >0 then return False, else True
+
+O(e+v) time. 
+O(v+e) space
+"""
+
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         
