@@ -4,6 +4,9 @@ In search use DFS, we if the char is not a dot, we go down that path, else if it
 For this stack will contain the Trinode and the index of the word. Start with [(root, 0)]
 If index == len(word), we will check if the node is end_node, if True then return True else continue to explore other paths in the stack
 If the stack empties without a return True, this means there is no path and return False
+
+O(m) time for add. O(26^m) for search where m is the length of the key
+O(m) space for add and O(1) space for search
 """
 
 class TrieNode:
