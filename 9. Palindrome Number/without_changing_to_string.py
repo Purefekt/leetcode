@@ -1,30 +1,43 @@
 """
-Without changing to string.
-if x = 12321, find multiple of 10 with the same digits, here divider = 10000
-x%10 will give the right most vale
-(x//divider)%10 will give the left most value
-compare them, if not same, false, else repeat and set x -> x//10 and repeat
-reduce divider by 100 fold on every iteration since we get rid of 2 units, leftmost and rightmost
-repeat till divider is less than or eq to 1
+Follow up: Without converting to string
+We need to compare the rightmost and leftmost values, remove and repeat
+Rightmost digit is x%10
+Leftmost digit is x//div, where div is a multiple of 10 with the same number of digits as x
+eg: x=2112, div=1000. Rightmost -> 2112%10 = 2. Leftmost -> 2112//1000 = 2
+Now remove both these digits. To remove leftmost x%div, to remove rightmost x//10
+Repeat till x exists. At any point l!=r, return False
+
+O(log_10(n)) time. Since we divide the input by 10 on each iteration.
+O(1) space to store r,l and div in constant space.
 """
 
 class Solution:
     def isPalindrome(self, x: int) -> bool:
+
+        if x<0:
+            return False
         
-        # false for negatives
-        if x<0: return False
+        # find a multiple of 10 at the same level as x
+        div = 1
+        while div <= x:
+            div *= 10
+        div //= 10
         
-        # find divider
-        divider = 1
-        while x >= divider:
-            divider = divider*10
-        divider = int(divider/10)
-        
-        
-        while divider > 1:
-            if x%10 != (x//divider)%10:
+        # right most digit %10, left most digit //div
+        while x:
+            r = x%10
+            l = x//div
+
+            if r!=l:
                 return False
-            x = x//10
-            divider = divider//100
+            
+            # update x, remove leftmost and rightmost digits
+            # remove leftmost with %div and remove rightmost with //10
+            x %= div
+            x //= 10
+
+            # update the divider by /100. Since we removed 2 digits, we dec it by 100X
+            div //=100
+        
         return True
-    
+        
