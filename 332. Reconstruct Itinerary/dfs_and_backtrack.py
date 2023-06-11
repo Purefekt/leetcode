@@ -1,8 +1,9 @@
 """
-Sort the tickets and build an adjacency list. This will give us a sorted adjacency list
-Run dfs recursively, if the length of result is the len of tickets + 1, then return True
-iterate through the given node's children, for each child, remove it from the adj list and add it to result.
-Now run dfs recursively on the child, if its False, then backtrack. Remove this node from the res and add it back int he same pos to the adj list
+Build the adj list and sort the values. This will ensure the order.
+Start the order list with JFK and start with the node JFK.
+Go to the first child of this node, remove the child from the adj list and continue.
+If we reach a node which has no children left, but the number of items in our order is != len(tickets)+1,
+this means we must backtrack.
 
 O(E^2) time where e is the number of egdes or tickets. This is because it will take O(v+e) for the entire graph but each time we go over e edges for backtracking. Since e will always be equal to or more than v, we consider it to be e^2.
 O(e) to keep track of adj list of all edges
@@ -10,33 +11,31 @@ O(e) to keep track of adj list of all edges
 
 class Solution:
     def findItinerary(self, tickets: List[List[str]]) -> List[str]:
-        
-        tickets.sort()
 
-        adj = {}
-        for source, destination in tickets:
-            if source not in adj:
-                adj[source] = [destination]
-            else:
-                adj[source].append(destination)
+        # build the graph
+        adj = collections.defaultdict(list)
+        for src, dst in tickets:
+            adj[src].append(dst)
         
-        res = ['JFK']
-        def dfs(src):
-            if len(res) == len(tickets)+1:
-                return True
-            if src not in adj:
-                return False
+        # sort the values
+        for v in adj.values():
+            v.sort()
+        
+        def backtrack(order, node):
+            if len(order) == len(tickets)+1:
+                return order
             
-            temp = list(adj[src])
-            for i in range(len(temp)):
-                dest = adj[src].pop(i)
-                res.append(dest)
-                if dfs(dest) is True:
-                    return True
-                else:
-                    res.pop()
-                    adj[src].insert(i,dest)
+            if node in adj:
+                for i in range(len(adj[node])):
+                    child = adj[node].pop(i)
+                    order.append(child)
+
+                    res = backtrack(order, child)
+                    if res is not False:
+                        return res
+
+                    adj[node].insert(i, child)
+                    order.pop()
             return False
         
-        dfs('JFK')
-        return res
+        return backtrack(["JFK"], "JFK")
