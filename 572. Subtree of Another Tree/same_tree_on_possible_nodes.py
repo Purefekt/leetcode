@@ -1,10 +1,10 @@
 """
-Iterative.
-Traverse all nodes and put all nodes where node.val == subRoot.val in a set.
-Traverse that set and for each node, run the same_tree problem on them. If they are same, return True, else check for other nodes.
-If no nodes are the same, then return with False
-O(m*n) time where n is the number of nodes in root and m is the number of nodes in subRoot
-O(m+n) space to store 2 stacks.
+For a pair of nodes, first from root and second from subRoot, run sameTree recursively to find if they are the same.
+If they are then return True.
+Else compare the root.left to subRoot and root.right to subRoot. If either is true, return True.
+
+O(m*n) where there are m nodes in root and n nodes in subRoot. Since we have to check for all pairs of nodes.
+O(m+n) space for the 2 stacks used.
 """
 
 # Definition for a binary tree node.
@@ -16,44 +16,29 @@ O(m+n) space to store 2 stacks.
 class Solution:
     def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
         
-        # traverse the tree, at any node where node.val == subRoot.val, add it to a set.
-        possible_roots = set()
-        stack = [root]
-        while stack:
-            node = stack.pop()
-            if node.val == subRoot.val:
-                possible_roots.add(node)
+        def sameTree(first, second):
+            if not first and not second:
+                return True
             
-            if node.left: stack.append(node.left)
-            if node.right: stack.append(node.right)
-        
-        def same_tree(test_root):
-            stack_poss_root = [(test_root,'root')]
-            stack_subRoot = [(subRoot, 'root')]
-            
-            while stack_poss_root and stack_subRoot:
-                poss_node, dir_poss_node = stack_poss_root.pop()
-                sub_node, dir_sub_node = stack_subRoot.pop()
-                
-                if poss_node.val != sub_node.val or dir_poss_node != dir_sub_node:
-                    return False
-                
-                if poss_node.left: stack_poss_root.append((poss_node.left, 'left'))
-                if poss_node.right: stack_poss_root.append((poss_node.right, 'right'))
-                                                          
-                if sub_node.left: stack_subRoot.append((sub_node.left, 'left'))
-                if sub_node.right: stack_subRoot.append((sub_node.right,'right'))
-            
-            if stack_poss_root or stack_subRoot:
+            if first and not second:
                 return False
             
+            if not first and second:
+                return False
+            
+            if first.val == second.val:
+                return sameTree(first.left, second.left) and sameTree(first.right, second.right)
+            
+            else:
+                return False
+        
+
+        # if subRoot is null, it is always true since we can go to the children of any leaf node of root.
+        if not subRoot: return True
+        # if root itself is null but subRoot is not, then it is false
+        if not root and subRoot: return False
+
+        if sameTree(root, subRoot) is True:
             return True
         
-        res = None
-        for poss_root in possible_roots:
-            res = same_tree(poss_root)
-            if res == True:
-                return True
-        
-        return False
-    
+        return self.isSubtree(root.left, subRoot) or self.isSubtree(root.right, subRoot)
