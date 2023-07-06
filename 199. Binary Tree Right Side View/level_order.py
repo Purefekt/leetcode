@@ -1,8 +1,10 @@
 """
-BFS level order traversal
-Then for the level order list, get the last element from each row to form result
-O(n) time to traverse all nodes
-O(n) to store all nodes in level order list
+Run level order BFS but always add the RIGHT child first.
+Do not keep a track of levels, since adding the right child first means that when we start a level, the node popped the first time is the right most.
+So for each level, add the first node to result
+
+O(n) time to run bfs on the entire tree and visit all nodes once.
+O(n) space to store the queue
 """
 
 # Definition for a binary tree node.
@@ -13,28 +15,22 @@ O(n) to store all nodes in level order list
 #         self.right = right
 class Solution:
     def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
-        
+
         if not root:
-            return []
+            return
         
-        # get level order traversal
         queue = [root]
-        level_order = []
-        
+        res = []
         while queue:
-            curr_level = []
             for i in range(len(queue)):
                 node = queue.pop(0)
-                curr_level.append(node.val)
+                if i == 0:
+                    res.append(node.val)
                 
-                if node.left: queue.append(node.left)
-                if node.right: queue.append(node.right)
-        
-            level_order.append(curr_level)
-        
-        res = []
-        for level in level_order:
-            res.append(level[-1])
+                if node.right:
+                    queue.append(node.right)
+                if node.left:
+                    queue.append(node.left)
         
         return res
-                
+                    
