@@ -1,29 +1,32 @@
-# initialize a min heap. Remove the smallest element from this min heap till the size of this min heap == k
-# on every add call, add the element to the heap and remove the min element once. The new min element will be the kth largest
-# but if the initial heap was empty, add a check to see if len of heap == k
+"""
+Create a heap with the initial array.
+Pop all elements till this heap lenght == k. Now the first element of the heap is the kth largest.
+Add an element to the heap and then pop an element from the heap.
+The resulting element at heap[0] is the kth largest.
+Edge case when the initial array is empty, so we have to check if size of array > k, only then pop.
+
+O(n*log(n) + m*log(k)) time. O(n) to convert nums into a heap. O(nlogn) to get a heap of size k where k can be at max n. If there are M calls to add, and the size of our heap is at max k, each heappop is O(logk), thus add O(mlog(k))
+O(n) space for heap.
+"""
 
 class KthLargest:
 
     def __init__(self, k: int, nums: List[int]):
+        self.nums = nums
         self.k = k
-        self.heap = nums
-        
-        heapq.heapify(self.heap)
-        
-        while len(self.heap) > self.k:
-            heapq.heappop(self.heap)      
+
+        heapq.heapify(self.nums)
+
+        while len(self.nums) > k:
+            heapq.heappop(self.nums)
 
     def add(self, val: int) -> int:
-        # add the element to the heap maintaining the heap property
-        heapq.heappush(self.heap, val)
-        
-        # most cases
-        if len(self.heap) > self.k:
-            heapq.heappop(self.heap)
-            
-            return self.heap[0]
-        else:
-            return self.heap[0]
+        heapq.heappush(self.nums, val)
+
+        if len(self.nums) > self.k:
+            heapq.heappop(self.nums)
+
+        return self.nums[0]
         
 
 
