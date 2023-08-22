@@ -1,9 +1,12 @@
-﻿"""
+"""
 Greedy and sorting.
 Get an array called minute reaches where each index belongs to a monster and what time that monster will reach the town. 
 Time taken = distance / time.
 Sort this to eliminate the monsters in the order they arrive to the town.
 Now create a simulation from time=0 till number of monsters, if the current time is >= current monster's reach time, this means we cannot kill it and we lose, return.
+
+O(nlogn) time. n time to create minuteReaches and nlogn to sort it and then n time to iterate through it.
+O(n) space to store the minuteReaches array.
 """
 
 class Solution:
@@ -21,4 +24,3 @@ class Solution:
             res += 1
         
         return res
-        
