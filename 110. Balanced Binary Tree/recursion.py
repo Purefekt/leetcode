@@ -5,6 +5,9 @@ base case return [True, 0] is node is null.
 balanced will be True as long as abs(left height - right height) <= 1, else False.
 Height will be max(left height, right height) + 1.
 Return the balance in the end by passing root.
+
+O(n) time to visit all nodes onces.
+O(1) space.
 """
 
 # Definition for a binary tree node.
@@ -31,4 +34,3 @@ class Solution:
             return [balanced, height]
         
         return helper(root)[0]
-        
