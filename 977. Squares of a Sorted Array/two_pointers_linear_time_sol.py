@@ -1,28 +1,54 @@
 """
-Runs in O(n) time.
-Use two pointers. l on left end and r on right end.
-initialize an array result of size nums.
-compare l and r of nums, if r is larger than l, square of r will be the last element in result. move r left.
-if l is smaller or equal to r, then square of l will be the last element in result
-Full result array from end to start.
+Two pointer in linear time.
+Find the index which is 0 or positive.
+The negative index is positive index -1.
+if nums[pos] < nums[neg], add nums[neg]**2 to result and move neg -=1.
+Else, add nums[pos]**2 to result and move pos += 1.
+
+O(n) time.
+O(1) space since output isnt taken into account.
 """
 
 class Solution:
     def sortedSquares(self, nums: List[int]) -> List[int]:
         
-        result = [0] * len(nums)
-        l = 0
-        r = len(nums) - 1
+        pos = -1
+        for i in range(len(nums)):
+            if nums[i] >= 0:
+                pos = i
+                break
         
-        for i in range(len(result)):
-            
-            if abs(nums[l]) <= abs(nums[r]):
-                result[len(result) - i - 1] = nums[r] * nums[r]
-                r -= 1
-            
-            elif abs(nums[l]) > abs(nums[r]):
-                result[len(result) -i - 1] = nums[l] * nums[l]
-                l += 1
-            
-        return result
+        # if there are no negative numbers
+        if pos == 0:
+            res = []
+            for n in nums:
+                res.append(n*n)
+            return res
         
+        # if there are no positive numbers
+        if pos == -1:
+            res = []
+            for i in range(len(nums)-1, -1, -1):
+                res.append(nums[i]**2)
+            return res
+
+        neg = pos-1
+        res = []
+        while pos < len(nums) and neg >= 0:
+            if nums[pos] > abs(nums[neg]):
+                res.append(nums[neg]**2)
+                neg -= 1
+            else:
+                res.append(nums[pos]**2)
+                pos += 1
+        
+        while pos < len(nums):
+            res.append(nums[pos]**2)
+            pos += 1
+        
+        while neg >= 0:
+            res.append(nums[neg]**2)
+            neg -= 1
+        
+        return res
+            
