@@ -1,57 +1,45 @@
 """
-Create a Trie using all the words in the dictionary. Other than children hashmap and end_node boolean, use another attribute 'word'.
-The word will be the final word when the end_node is True. For all intermediate nodes, it will be an empty string
-Use a helper function replace word, this will go through all the chars in the word and see if they exist in a trie. At any point when the end_node is true (and we have no exit the function due to a char not being in the children), we will exit with the given word.
-Do this for all words in the sentence and return
+TRIE.
+Create a trie with all words in the dictionary.
+For each word in sentence, get the root using the trie by travelling the trie.
+Use helper function for this.
 
-O(n * avg(l)) time where n is the number of words in dictionary and average l is the average length
-O(k) space to store the sentence intermediate list, where k is the number of words in the sentence. The Trie needs O(1) space to store
+O(d*w + s*w) time where d is the size of dictionary, s is the size of sentence and w is the average length of a word. We use d*w time to create the trie and s*w time to find root of each word in sentence.
+O(d*w + s*w) space, trie uses d*w space and root words are stores using s*w space.
 """
 
 class TrieNode:
-    def __init__(self):
+    def __init__(self, val):
+        self.val = val
         self.children = {}
-        self.end_node = False
-        self.word = ''
+        self.end = False
 
 class Solution:
     def replaceWords(self, dictionary: List[str], sentence: str) -> str:
-
-        root = TrieNode()
-
-        # fill the trie with dictionary words
-        for word in dictionary:
+        root = TrieNode(0)
+        for w in dictionary:
             dummy = root
-            for c in word:
+            for c in w:
                 if c not in dummy.children:
-                    dummy.children[c] = TrieNode()
-                    dummy = dummy.children[c]
-                else:
-                    dummy = dummy.children[c]
-            dummy.end_node = True
-            dummy.word = word
+                    dummy.children[c] = TrieNode(c)
+                dummy = dummy.children[c]
+            dummy.end = True
         
-        def replace_word(word):
+        def get_root(word):
             dummy = root
+            res = ''
             for c in word:
+                if dummy.end == True:
+                    return res
                 if c not in dummy.children:
-                    return False
+                    return word
                 else:
+                    res += c
                     dummy = dummy.children[c]
-                
-                if dummy.end_node is True:
-                    return dummy.word
-                
-            if dummy.end_node is False:
-                return False
-            return dummy.word
-        
+            return word
 
         sentence = sentence.split(' ')
-        for i,word in enumerate(sentence):
-            replaced_word = replace_word(word)
-
-            if replaced_word:
-                sentence[i] = replaced_word
+        for i in range(len(sentence)):
+            sentence[i] = get_root(sentence[i])
         
         return ' '.join(sentence)
