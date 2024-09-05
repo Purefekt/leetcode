@@ -1,28 +1,30 @@
 """
-Get the amount required by the remaining n rolls.
-If this is less than n or larger than 6*n, we cannot construct this using a 6 sided die.
-Create a result array of 0s and keep adding 1 to each and repeat till we reach remaining amount.
+Greedy
+First check if it is possible.
+If sum of remaining n/n > 6 or sum of remaining n < n (cannot even assign 1 to all n) or if is it not divisble as integer, it is not possible.
+Create res array of size n of all 0s.
+Keep incrementing each position by 1 and repeat.
 
-O(n) time to iterate over remaining sum.
-O(1) space to track constants like rolls_sum, total_sum and rem_sum. res is a part of output and wont be used for space complexity.
+O(m+n) time since getting sum of rolls takes m time and then we iterate through sum(n) where each index can be at max update 6 times, so we go down to 6*n.
+O(1) space.
 """
 
 class Solution:
     def missingRolls(self, rolls: List[int], mean: int, n: int) -> List[int]:
+        
+        # get sum of n
+        total_rolls = len(rolls) + n
+        total_sum = total_rolls * mean
+        total_n = total_sum - sum(rolls)
 
-        m = len(rolls)
-
-        rolls_sum = sum(rolls)
-        total_sum = (m+n) * mean
-        rem_sum = total_sum - rolls_sum
-
-        if rem_sum < n or rem_sum > 6*n:
+        if total_n/n > 6 or total_n < n or (total_n//n) != total_n//n:
             return []
         
-        # distribute the remaining sum over equally
         res = [0] * n
-        for i in range(rem_sum):
-            idx = i%n
+        idx = 0
+        for _ in range(total_n):
             res[idx] += 1
+            idx += 1
+            idx %= n
         
         return res
