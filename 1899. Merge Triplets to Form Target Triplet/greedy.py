@@ -1,47 +1,31 @@
 """
-For all 3 places, we want arrays where that space == that index in target and the other 2 indexes are <= other 2 in target.
-Set first flag to false and go through all triplets.
-If we find an array where triplet[0] == target[0] and triplet[1] <= target[1] and triplet[2] <= target[2], then we can get First.
-If we go through all the triplets and do not get a valid array, return False
-Repeat this for other 2 as well.
-If all three are true, return True.
+We can only use a triplet if all 3 values are <= to all three corresponding values in target.
+And actually we only care about this triplet if atleast 1 of the 3 values is equal to 1 of the three values in target.
+Set 3 flags to false: a,b,c.
+Iterate through the flags, first check that each element is <= the corresponding element in target.
+Now we can consider this triplet.
+Now if any of a,b,c are == target, then set those as True.
+Finally return a and b and c.
 
-O(n) time since we do 3 passes over triplets.
-O(1) space since we use flags.
+O(n) time.
+O(1) space.
 """
 
 class Solution:
     def mergeTriplets(self, triplets: List[List[int]], target: List[int]) -> bool:
         
-        # find first valid
-        first = False
-        for f,s,t in triplets:
-            if f == target[0]:
-                if s <= target[1] and t <= target[2]:
-                    first = True
-                    break
-        
-        if first is False: return False
+        a = False
+        b = False
+        c = False
 
-        # find second valid
-        second = False
-        for f,s,t in triplets:
-            if s == target[1]:
-                if f <= target[0] and t <= target[2]:
-                    second = True
-                    break
+        for ta,tb,tc in triplets:
+            # only accept this triplet if all values are <= target
+            if ta <= target[0] and tb <= target[1] and tc <= target[2]:
+                if ta == target[0]:
+                    a = True
+                if tb == target[1]:
+                    b = True
+                if tc == target[2]:
+                    c = True
         
-        if second is False: return False
-
-        # find third valid
-        third = False
-        for f,s,t in triplets:
-            if t == target[2]:
-                if f <= target[0] and s <= target[1]:
-                    third = True
-                    break
-        
-        if third is False: return False
-
-        return True
-        
+        return a and b and c
