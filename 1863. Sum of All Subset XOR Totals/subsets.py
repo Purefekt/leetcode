@@ -1,27 +1,12 @@
 class Solution:
     def subsetXORSum(self, nums: List[int]) -> int:
         
-        res = 0
-        def helper(idx, combo):
-            nonlocal res
-
+        def backtrack(idx, total):
             if idx == len(nums):
-                vals = combo.copy()
-                if not vals:
-                    res += 0
-                else:
-                    to_add = vals[0]
-                    for i in range(1, len(vals)):
-                        to_add ^= vals[i]
-                    res += to_add
-                return
+                return total
             
-            # skip
-            helper(idx+1, combo)
-            # keep
-            combo.append(nums[idx])
-            helper(idx+1, combo)
-            combo.pop()
+            keep = backtrack(idx+1, total^nums[idx])
+            skip = backtrack(idx+1, total)
+            return keep + skip
         
-        helper(0, [])
-        return res
+        return backtrack(0, 0)
