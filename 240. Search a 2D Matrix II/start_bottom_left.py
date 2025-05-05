@@ -1,26 +1,42 @@
 """
-Start at the bottom left cell using two pointers, one for row and one for column.
-Start the row pointer at m-1 and column pointer at 0.
-If the target is found, return true. Else if the target is larger than the cell, skip to the next column. If the target is smaller than the cell, move to the above row
-Keep doing this till either target it found or if the row pointer becomes less than 0 or the column pointer crosses max num of columns, then return False.
+Since rows and cols are sorted:
+if we go right, the number increases
+if we go down, the number increases
+if we go left, the number decreases
+if we go up, the number decreases
+We start at bottom left, if its the target, return True
+Else if this is smaller than target, we go right
+Else if this is larger than target, we go up
+If we go out of bound, we stop search
+NOTE: Binary solution works by iterating through all rows and running binary search on all rows which is O(nlogm)
+
+O(m+n) time.
+O(1) space.
 """
 
 class Solution:
     def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
         
-        m = len(matrix)
-        n = len(matrix[0])
+        # a cell to the top is smaller
+        # a cell to the right is larger
+        # start from bottom left
+        # if we find target, return True
+        # if current cell is smaller than target, go right
+        # if current cell is larger than target, go up
+        # if out of bound, return False
+
+        m,n = len(matrix), len(matrix[0])
         
-        r = m-1
-        c = 0
-        
-        while r>=0 and c<n:
-            if target == matrix[r][c]:
+        # start at bottom left
+        i = m-1
+        j = 0
+
+        while 0<=i<m and 0<=j<n:
+            if matrix[i][j] == target:
                 return True
-            elif target > matrix[r][c]:
-                c += 1
-            elif target <= matrix[r][c]:
-                r -= 1
+            elif matrix[i][j] < target:
+                j += 1
+            else:
+                i -= 1
         
         return False
-    
